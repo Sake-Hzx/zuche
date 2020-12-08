@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guigu.dao.RoleDao">
+
+	<select id="queryallroles" resultType="RoleInfo">
+		select * from role_info
+	</select>
+
+	<select id="queryRolesByuid" parameterType="int" resultType="RoleInfo">
+		select r.* from role_info r
+		    left join userrole_info ur
+			on  r.id = ur.rid
+			where ur.uid =#{uid}
+	</select>
+
+
+</mapper>

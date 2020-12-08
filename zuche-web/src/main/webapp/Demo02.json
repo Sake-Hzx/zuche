@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "name": "系统管理",
+    "url": "Demo05.html",
+    "parentId": 0,
+    "icon": "glyphicon glyphicon-cog"
+  },
+  {
+    "id": 4,
+    "name": "员工管理",
+    "url": "userlist.jsp",
+    "parentId": 1,
+    "icon": "glyphicon glyphicon-user"
+  },
+  {
+    "id": 5,
+    "name": "角色管理",
+    "url": "rolelist.jsp",
+    "parentId": 1,
+    "icon": "glyphicon glyphicon-user"
+  },
+
+  {
+    "id": 7,
+    "name": "授权管理",
+    "url": "authority.jsp",
+    "parentId": 1,
+    "icon": "glyphicon glyphicon-user"
+  },
+
+
+  {
+    "id": 2,
+    "name": "审批管理",
+    "url": "Demo05.html",
+    "parentId": 0,
+    "icon": "glyphicon glyphicon-heart"
+  },
+  {
+    "id": 20,
+    "name": "借出审批",
+    "url": "Demo05.html",
+    "parentId": 2,
+    "icon": "glyphicon glyphicon-heart"
+  },
+  {
+    "id": 21,
+    "name": "借出记录",
+    "url": "Demo05.html",
+    "parentId": 2,
+    "icon": "glyphicon glyphicon-heart"
+  },
+  {
+    "id": 22,
+    "name": "还车审批",
+    "url": "Demo05.html",
+    "parentId": 2,
+    "icon": "glyphicon glyphicon-heart"
+  },
+  {
+    "id": 23,
+    "name": "还车记录",
+    "url": "Demo05.html",
+    "parentId": 2,
+    "icon": "glyphicon glyphicon-heart"
+  },
+
+  {
+    "id": 3,
+    "name": "统计管理",
+    "url": "Demo05.html",
+    "parentId": 0,
+    "icon": "glyphicon glyphicon-th-large"
+  },
+
+  {
+    "id": 24,
+    "name": "财务统计",
+    "url": "Demo05.html",
+    "parentId":3,
+    "icon": "glyphicon glyphicon-music"
+  },
+  {
+    "id": 25,
+    "name": "车辆统计",
+    "url": "Demo05.html",
+    "parentId":3,
+    "icon": "glyphicon glyphicon-music"
+  }
+
+]

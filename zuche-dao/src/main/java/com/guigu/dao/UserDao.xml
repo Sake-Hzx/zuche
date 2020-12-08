@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guigu.dao.UserDao">
+
+
+    <resultMap id="usermap" type="userInfo">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="loginName" property="loginname"></result>
+        <result column="pwd" property="password"></result>
+        <result column="isyuangonorguke" property="isyuangonorguke"></result>
+		<result column="isdelete" property="isdelete"></result>
+		<result column="balance" property="balance"></result>
+    </resultMap>
+    <!--根据用户名和密码  租客登录验证-->
+    <select id="zukelogin" resultMap="usermap">
+		select * from user_info
+		where loginname =#{loginname} and pwd =#{pwd} and isdelete=0 and isyuangonorguke=0
+	</select>
+	<!--根据用户名和密码  员工登录验证-->
+	<select id="yuangonlogin" resultMap="usermap">
+		select * from user_info
+		where loginname =#{loginname} and pwd =#{pwd} and isdelete=0 and isyuangonorguke=1
+	</select>
+	<!--判断账号是否被注册-->
+	<select id="panduanzhuce" parameterType="String"  resultMap="usermap">
+		select * from user_info where loginname=#{loginname}
+	</select>
+	<!--注册-->
+	<insert id="zhuce">
+		INSERT INTO user_info VALUES
+		(null,#{loginname},#{loginname},#{pwd},null,0,0,0);
+	</insert>
+    <!--查询所有员工信息-->
+    <select id="queryUserAll"  resultMap="usermap">
+		select * from user_info where isdelete=0 and isyuangonorguke=1
+	</select>
+    <!--添加员工-->
+    <insert id="addUserInfo" parameterType="userInfo">
+	INSERT INTO user_info VALUES
+	(null,#{name},#{loginname},#{password},null,0,1,0);
+	</insert>
+    <!--根据id删除员工-->
+    <update id="delUserInfoByid" parameterType="int">
+		UPDATE user_info SET isdelete=1 where id=#{id}
+	</update>
+    <!--根据id查询员工详情-->
+    <select id="queryuserByid" parameterType="int" resultMap="usermap">
+		select * from user_info where id=#{id}
+	</select>
+    <!--根据员工实体修改员工详情-->
+    <update id="updateuser" parameterType="userInfo">
+		UPDATE user_info SET name=#{name},loginName=#{loginname},pwd=#{password} WHERE id=#{id}
+	</update>
+
+	<!--查询所有顾客信息-->
+	<select id="queryallguke"  resultMap="usermap">
+		select * from user_info where isdelete=0 and isyuangonorguke=0
+	</select>
+	<!--查询所有车信息-->
+	<select id="queryallCar"  resultType="Car">
+		SELECT c.carid,ctp.cartype,c.lpnumber,c.carcolor,c.price,c.free FROM car c
+		INNER JOIN car_type ctp
+		ON c.cartypeid=ctp.cartypeid
+	</select>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guigu.dao.MenuDao">
+
+    <resultMap id="menumap" type="menuInfo">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="menucode" property="menuCode"></result>
+        <result column="parentid" property="parentId"></result>
+        <result column="nodetype" property="nodeType"></result>
+        <result column="iconurl" property="iconUrl"></result>
+        <result column="sort" property="sort"></result>
+        <result column="linkurl" property="linkUrl"></result>
+        <result column="level" property="level"></result>
+        <result column="path" property="path"></result>
+    </resultMap>
+
+
+    <select id="querymenuBypidandnodeType" resultMap="menumap">
+		select * from menu_info where parentid =#{pid} and nodetype = #{nodeType}
+	</select>
+
+    <select id="querymenuidbyrid" parameterType="int" resultType="Integer">
+		select m.id from menu_info m
+		left join rolemenu_info rm
+		on  m.id = rm.mid
+		where rm.rid =#{rid}
+	</select>
+
+    <!--根据角色id删除角色权限-->
+    <delete id="delQuanxianByid" parameterType="int">
+		DELETE FROM rolemenu_info WHERE rid=#{rid}
+	</delete>
+    <!--根据角色id给角色赋予菜单权限-->
+    <insert id="addQuanxianByid">
+	    INSERT INTO rolemenu_info VALUES
+	    (null,#{rid},#{mid});
+	</insert>
+    <!--根据员工id查询他拥有的菜单id-->
+    <select id="querymenuByuid" resultMap="menumap">
+            SELECT DISTINCT m.* FROM menu_info m
+			LEFT JOIN rolemenu_info rm ON m.`id` = rm.`mid`
+			WHERE rm.rid =
+
+			(
+			SELECT ur.rid FROM role_info r
+			LEFT JOIN userrole_info ur
+			ON  r.id = ur.rid
+			WHERE ur.uid =#{uid}
+			)
+	</select>
+</mapper>

@@ -1,0 +1,4 @@
+# Project exclude paths
+/zuche-dao/target/
+/zuche-service/target/
+/zuche-web/target/

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guigu.dao.DingDanDao">
+
+	<!--根据顾客id，查询当前顾客的订单信息-->
+	<select id="queryDingdanByid" parameterType="int" resultType="DingDan">
+		SELECT zu.zucarid,zu.carid,cartp.cartype,zu.gukeid,zu.zucardidian,zu.rentalTime,zu.huancarTime,zu.deposit,zu.name,zu.state FROM zucardingdan zu
+		INNER JOIN car car
+		ON zu.carid=car.carid
+		INNER JOIN car_type cartp
+		ON car.cartypeid=cartp.cartypeid
+		where zu.gukeid=#{gukeid}
+	</select>
+	<!--根据顾客id，给顾客账户充值余额-->
+	<update id="chonzhi">
+		UPDATE user_info SET balance=balance+#{jine} where id=#{id}
+	</update>
+	<!--根据顾客id，查询顾客余额-->
+	<select id="chaxunBalance" parameterType="int" resultType="Float">
+		select balance from user_info where id=#{id}
+	</select>
+	<!--提交租车订单-->
+	<insert id="dingdan">
+	INSERT INTO zucardingdan VALUES
+	(null,#{carid},#{carid},#{gukeid},#{zucardidian},#{rentalTime},null,#{deposit},'无',0);
+	</insert>
+	<!--根据顾客id，给顾客账户充值余额-->
+	<update id="kouyajin">
+		UPDATE user_info SET balance=balance-#{deposit} where id=#{id}
+	</update>
+	<!--查询所有未审核订单信息-->
+	<select id="queryDingdanWeishenhe" resultType="DingDan">
+		SELECT zu.zucarid,zu.carid,cartp.cartype,zu.gukeid,zu.zucardidian,zu.rentalTime,zu.huancarTime,zu.deposit,zu.name,zu.state FROM zucardingdan zu
+		INNER JOIN car car
+		ON zu.carid=car.carid
+		INNER JOIN car_type cartp
+		ON car.cartypeid=cartp.cartypeid
+		where zu.state=0
+	</select>
+	<!--根据订单id修改订单表里这个订单的状态为租赁中-->
+	<update id="updateDingDanzt" >
+		UPDATE zucardingdan SET state=1,name=#{shenpiren} where zucarid=#{ddid}
+	</update>
+	<!--同意租车审批-->
+	<insert id="tonyishenpi">
+	INSERT INTO dingdanjilu VALUES
+	(null,#{ddid},#{carid},#{gukeid},'租车',#{shenpiren},'同意',#{caozuotime});
+	</insert>
+	<!--查询所有租车订单记录信息-->
+	<select id="queryDingDanJiLuAll" resultType="DingDanJiLu">
+		select * from dingdanjilu where state='租车'
+	</select>
+	<!--查询所有租车订单-->
+	<select id="queryDingdanAll" resultType="DingDan">
+		SELECT zu.zucarid,zu.carid,cartp.cartype,zu.gukeid,zu.zucardidian,zu.rentalTime,zu.huancarTime,zu.deposit,zu.name,zu.state FROM zucardingdan zu
+		INNER JOIN car car
+		ON zu.carid=car.carid
+		INNER JOIN car_type cartp
+		ON car.cartypeid=cartp.cartypeid
+	</select>
+	<!--修改订单表里这个订单的状态为已拒绝  修改审批人-->
+	<update id="updateDingDanztJuJue" >
+		UPDATE zucardingdan SET state=2,name=#{shenpiren} where zucarid=#{ddid}
+	</update>
+	<!--拒绝租车审批-->
+	<insert id="jujueshenpi">
+	INSERT INTO dingdanjilu VALUES
+	(null,#{ddid},#{carid},#{gukeid},'租车',#{shenpiren},'拒绝',#{caozuotime});
+	</insert>
+	<!--根据订单id查询订单详情-->
+	<select id="queryDingById" parameterType="int" resultType="DingDan">
+		SELECT zu.zucarid,zu.carid,cartp.cartype,zu.gukeid,zu.zucardidian,zu.rentalTime,zu.huancarTime,zu.deposit,zu.name,zu.state FROM zucardingdan zu
+		INNER JOIN car car
+		ON zu.carid=car.carid
+		INNER JOIN car_type cartp
+		ON car.cartypeid=cartp.cartypeid
+		where zu.zucarid=#{id}
+	</select>
+	<!--根据车id获取该车的日租金-->
+	<select id="queryCarzujin" parameterType="int" resultType="Float">
+		SELECT price FROM car WHERE carid=#{id}
+	</select>
+	<!--查询所有未审核的还车申请-->
+	<select id="queryDingdanHuanCheWeishenhe" resultType="HuanCheDingDan">
+		SELECT * FROM huanchedingdan where state=0
+	</select>
+	<!--提交还车申请-->
+	<insert id="huanche">
+	INSERT INTO huanchedingdan VALUES
+	(null,#{hcddid},#{carid},#{gukeid},#{zujin},0,'无');
+	</insert>
+	<!--根据订单id修改订单的状态为 还车待审核 还车时间为当前时间-->
+	<update id="updateDingDanStateHuanCheDaiShengHe">
+		UPDATE zucardingdan SET state=4,huancarTime=#{huancarTime} where zucarid=#{id}
+	</update>
+	<!--根据顾客id 扣除余额-->
+	<update id="jianBalanceByid">
+		UPDATE user_info SET balance=balance-#{zujin} where id=#{id}
+	</update>
+	<!--修改还车订单审批的记录信息 状态为已结算  修改审批人-->
+	<update id="updateHuanCheDingDanzt11" >
+		UPDATE huanchedingdan SET state=3,shenpiren=#{shenpiren} where hcddid=#{ddid}
+	</update>
+	<!--修改订单表里这个订单的状态为已结算  修改审批人-->
+	<update id="updateHuanCheDingDanzt" >
+		UPDATE zucardingdan SET state=3,name=#{shenpiren} where zucarid=#{ddid}
+	</update>
+	<!--给记录表添加还车同意记录-->
+	<insert id="tonyiHuanCheshenpi">
+	INSERT INTO dingdanjilu VALUES
+	(null,#{ddid},#{carid},#{gukeid},'还车',#{shenpiren},'同意',#{caozuotime});
+	</insert>
+	<!--退还押金-->
+	<update id="tuiyajin">
+		UPDATE user_info SET balance=balance+#{yajin} where id=#{id}
+	</update>
+	<!--查询所有还车订单记录信息-->
+	<select id="queryHuanCheDingDanJiLuAll" resultType="DingDanJiLu">
+		select * from dingdanjilu where state='还车'
+	</select>
+</mapper>
